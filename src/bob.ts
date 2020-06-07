@@ -28,8 +28,6 @@ export const init = (app) => {
 };
 
 const update = (sprite, resources, app, bob) => {
-    const bobHeight = resources.bob.texture.height;
-    const bottomOfScreen = app.renderer.height;
     const bobHasFallenBelowScreen = spriteHasFallenBelowScreen(sprite, resources, app);
 
     if(right.isDown) {
@@ -40,25 +38,34 @@ const update = (sprite, resources, app, bob) => {
         sprite.x -= movementSpeed;
     }
 
-    if (up.isDown && bobHasFallenBelowScreen) {
+    if (up.isDown) {
         bob.speed.y = -jumpPower;
     }
 
     if (bobHasFallenBelowScreen) {
-        hitTheGround(sprite, bob, bottomOfScreen, bobHeight);
+        hitTheGround(sprite, bob, app, resources);
     } else {
-        fall(sprite, bob);
+        fall(sprite, bob, resources, app);
     }
 };
 
-const hitTheGround = (sprite, bob, bottomOfScreen, bobHeight) => {
+const hitTheGround = (sprite, bob, app, resources) => {
+    const bobHeight = resources.bob.texture.height;
+    const bottomOfScreen = app.renderer.height;
+
     if (bob.speed.y > 0) {
         bob.speed.y = 0;
     }
     sprite.y = bottomOfScreen - bobHeight;
 };
 
-const fall = (sprite, bob) => {
+const fall = (sprite, bob, resources, app) => {
     bob.speed.y += gravity;
     sprite.y += bob.speed.y;
+
+    const bobHasFallenBelowScreen = spriteHasFallenBelowScreen(sprite, resources, app);
+
+    if (bobHasFallenBelowScreen) {
+        hitTheGround(sprite, bob, app, resources);
+    }
 };

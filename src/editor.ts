@@ -15,7 +15,7 @@ export const init = (app) => {
     let blocks: any[] = [];
 
     app.ticker.add(() => {
-        update(blocks);
+        update();
     });
 
     document.body.getElementsByTagName('canvas')[0].addEventListener('mousedown', (e) => {
@@ -46,6 +46,6 @@ const addBlock = (currentBlock: Block, blocks: Block[], app) => {
 
 };
 
-const update = (blocks: any[]) => {
+const update = () => {
     //blocks.forEach()
 };
