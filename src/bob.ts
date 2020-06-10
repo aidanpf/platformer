@@ -1,71 +1,105 @@
 import { gravity, jumpPower, movementSpeed } from "./data.js";
-import { right, left, up } from "./keyboard.js";
-import { spriteHasFallenBelowScreen } from "./helpers/sprites.js";
+import { right, left, up, down } from "./keyboard.js";
+import { getSides } from "./helpers/sprites.js";
+import { GameObjectCreator } from "./types/GameObjectCreator.js";
+import { bit } from "./bit.js";
+import { initGameObjectWithGraphics } from "./setup.js";
+import { messenger, messages } from "./helpers/messenger.js";
+import { diffCoords } from "./helpers/coords.js";
 
-declare const PIXI: any;
-export const init = (app) => {
+export const bob: GameObjectCreator = (app, sprite, resources) => {
 
-    const onLoad = (_, resources) => {
-        const sprite = new PIXI.Sprite(resources.bob.texture);
-        const bob = {
-            speed: {
-                x: 0,
-                y: 0
-            }
+    const speed = {
+        x: 0,
+        y: 0
+    };
+
+    const dimensions = {
+        x: resources.bob.texture.width,
+        y: resources.bob.texture.height
+    };
+
+    const init = () => {
+        app.ticker.add(update);
+        down.press = () => {
+            const {x, y} = dimensions;
+            initGameObjectWithGraphics(app, bit, 'bit', resources, sprite.x + x, sprite.y + y/2)
         };
-
-        sprite.x = 0
-        sprite.y = 0;
+    };
     
-        app.stage.addChild(sprite);
+    const update = () => {
+        const previousPosition = {x: sprite.x, y: sprite.y};
+    
+        if(right.isDown) {
+            sprite.x += movementSpeed;
+        }
+    
+        if (left.isDown) {
+            sprite.x -= movementSpeed;
+        }
+    
+        if (up.isDown) {
+            speed.y = -jumpPower;
+        }
 
-        app.ticker.add(() => {
-            update(sprite, resources, app, bob);
+        fall();
+
+        messenger.dispatch({
+            type: messages.bobFinishesMoving,
+            sprite,
+            previousPosition
+        });
+    };
+    
+    const fall = () => {
+        speed.y += gravity;
+        sprite.y += speed.y;
+    };
+
+    const moveOutOfBlock = ({block, previousPosition}) => {
+
+        const diff = diffCoords(sprite, previousPosition);
+
+        const movingRight = diff.x > 0;
+        const movingDown = diff.y > 0;
+        const movingLeft = diff.x < 0;
+        const movingUp = diff.y < 0;
+
+        const blockSides = getSides(block, block.texture);
+        const bobSides = getSides(previousPosition, sprite.texture);
+
+        const previouslyToLeftOfBlock = bobSides.right < blockSides.left;
+        const previouslyToRightOfBlock = bobSides.left > blockSides.right;
+        const previouslyAboveBlock = bobSides.bottom < blockSides.top;
+        const previouslyBelowBlock = bobSides.top > blockSides.bottom;
+
+        if (movingRight && previouslyToLeftOfBlock) {
+            sprite.x = (block.x - sprite.texture.width - 0.1);
+        } else if (movingDown && previouslyAboveBlock) {
+            sprite.y = (block.y - sprite.texture.height - 0.1);
+            speed.y = 0;
+        } else if (movingLeft && previouslyToRightOfBlock) {
+            sprite.x = (blockSides.right + 0.1);
+        } else if (movingUp && previouslyBelowBlock) {
+            sprite.y = (blockSides.bottom + 0.1);
+            speed.y = 0;
+        }
+
+        messenger.dispatch({
+            type: messages.bobFinishesCollisionResolution,
+            sprite,
+            previousPosition
         });
     };
 
-    app.loader.add('bob', 'placeholder.png').load(onLoad);
+    const receive = (message) => {
+        if (message.type === messages.bobBeginsOverlapWithBlock) {
+            moveOutOfBlock(message);
+        }
+    };
+
+    init();
+
+    return {receive};
 };
 
-const update = (sprite, resources, app, bob) => {
-    const bobHasFallenBelowScreen = spriteHasFallenBelowScreen(sprite, resources, app);
-
-    if(right.isDown) {
-        sprite.x += movementSpeed;
-    }
-
-    if (left.isDown) {
-        sprite.x -= movementSpeed;
-    }
-
-    if (up.isDown) {
-        bob.speed.y = -jumpPower;
-    }
-
-    if (bobHasFallenBelowScreen) {
-        hitTheGround(sprite, bob, app, resources);
-    } else {
-        fall(sprite, bob, resources, app);
-    }
-};
-
-const hitTheGround = (sprite, bob, app, resources) => {
-    const bobHeight = resources.bob.texture.height;
-    const bottomOfScreen = app.renderer.height;
-
-    if (bob.speed.y > 0) {
-        bob.speed.y = 0;
-    }
-    sprite.y = bottomOfScreen - bobHeight;
-};
-
-const fall = (sprite, bob, resources, app) => {
-    bob.speed.y += gravity;
-    sprite.y += bob.speed.y;
-
-    const bobHasFallenBelowScreen = spriteHasFallenBelowScreen(sprite, resources, app);
-
-    if (bobHasFallenBelowScreen) {
-        hitTheGround(sprite, bob, app, resources);
-    }
-};
