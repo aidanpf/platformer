@@ -20,6 +20,8 @@ export const editor = (app) => {
         app.renderer.plugins.interaction.on('pointerup', (e) => 
             addBlock(blockStart, clickCoords(e))
         );
+
+        addBlock({x: -100, y: 1000}, {x: 600, y: 1100});
     }
     
     const addBlock = (start: Coordinates, end: Coordinates) => 
