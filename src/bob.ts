@@ -14,6 +14,8 @@ export const bob: GameObjectCreator = (app, sprite, resources) => {
         y: 0
     };
 
+    let canJump = false;
+
     const dimensions = {
         x: resources.bob.texture.width,
         y: resources.bob.texture.height
@@ -38,8 +40,9 @@ export const bob: GameObjectCreator = (app, sprite, resources) => {
             sprite.x -= movementSpeed;
         }
     
-        if (up.isDown) {
+        if (up.isDown && canJump) {
             speed.y = -jumpPower;
+            canJump = false;
         }
 
         fall();
@@ -73,11 +76,13 @@ export const bob: GameObjectCreator = (app, sprite, resources) => {
         const previouslyAboveBlock = bobSides.bottom < blockSides.top;
         const previouslyBelowBlock = bobSides.top > blockSides.bottom;
 
+
         if (movingRight && previouslyToLeftOfBlock) {
             sprite.x = (block.x - sprite.texture.width - 0.1);
         } else if (movingDown && previouslyAboveBlock) {
             sprite.y = (block.y - sprite.texture.height - 0.1);
             speed.y = 0;
+            canJump = true;
         } else if (movingLeft && previouslyToRightOfBlock) {
             sprite.x = (blockSides.right + 0.1);
         } else if (movingUp && previouslyBelowBlock) {
