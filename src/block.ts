@@ -1,6 +1,7 @@
 import { messages, messenger } from "./helpers/messenger.js";
+import { bump } from "./helpers/bump.js";
 
-export const block = (_, bump, sprite, x, y) => {
+export const block = (_, sprite, x, y) => {
     
     const receive = (message) => {
         if (message.type === messages.bobFinishesMoving) {

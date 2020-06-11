@@ -7,6 +7,11 @@ export type Messenger = {
 
 export type Subscriber  = {
     receive: (message) => void;
+    receiveUnsubscribe?: (unsubscribe: Function) => void;
+}
+
+export interface StoredSubscriber extends Subscriber {
+    id: number;
 }
 
 export interface Message {
@@ -15,11 +20,30 @@ export interface Message {
 }
 
 export const messenger = (() => {
-    let subscribers: Subscriber[] = [];
+    let subscribers: StoredSubscriber[] = [];
+    let latestId = 0;
 
-    const subscribe = (subscriber: Subscriber) => {
-        subscribers.push(subscriber);
-    }
+    const storageReadySubscribers = (subscribers: Subscriber[]): StoredSubscriber[] => subscribers.map(s => ({
+        ...s,
+        id: ++latestId
+    }));
+
+    const subscribe = (..._subscribers: Subscriber[]) => {
+        const storageReady = storageReadySubscribers(_subscribers); 
+
+        subscribers.push(...storageReady);
+        giveUnsubscribe(storageReady);
+    };
+
+    const giveUnsubscribe = (storedSubscribers: StoredSubscriber[]) => 
+        storedSubscribers.forEach(s => {
+            if (s.receiveUnsubscribe) {
+                s.receiveUnsubscribe(() => {
+                    subscribers = subscribers.filter(t => t.id !== s.id);
+                })
+            }
+        })
+    ;
 
     const dispatch = (message: Message) => {
 
@@ -35,9 +59,19 @@ export const messenger = (() => {
     return {dispatch, subscribe};
 })();
 
+export const waitForAllSubscribed = (message: Message) => ({
+    then: (nextFunction: () => void) => {
+        if (message.type === messages.allFinishSubscribing) {
+            nextFunction();
+        }
+    }
+});
+
 export enum messages {
     editorDrawsBlock = 'editor draws block',
     bobFinishesMoving = 'bob finishes moving',
     bobFinishesCollisionResolution = 'bob finishes collision resolution',
-    bobBeginsOverlapWithBlock = 'bob begins overlap with block'
+    bobBeginsOverlapWithBlock = 'bob begins overlap with block',
+    allFinishSubscribing = 'all finish subscribing',
+    bitFinishedMoving = 'bit finished moving'
 }

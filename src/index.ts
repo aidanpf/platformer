@@ -2,13 +2,11 @@ import {editor} from "./editor.js";
 import {createApp, initGameObjectWithGraphics} from "./setup.js";
 import { bob } from "./bob.js";
 import { factory } from "./helpers/gameObjectFactory.js";
-import { messenger } from "./helpers/messenger.js";
-import {Bump} from './helpers/bump.js';
+import { messenger, messages } from "./helpers/messenger.js";
 import { camera } from "./camera.js";
 
 declare const PIXI: any;
 
-const bump = new Bump(PIXI);
 const app = createApp();
 
 app.loader.add('bob', `textures/bob.png`);
@@ -19,13 +17,11 @@ app.loader.load((_, resources) => {
 });
 
 messenger.subscribe(
-    camera(app)
-);
-
-messenger.subscribe(
-    factory(app, bump)
-);
-
-messenger.subscribe(
+    camera(app),
+    factory(app),
     editor(app)
 );
+
+messenger.dispatch({
+    type: messages.allFinishSubscribing
+});

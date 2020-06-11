@@ -1,9 +1,10 @@
 import { messages, messenger } from "./messenger.js";
 import { block } from "../block.js";
+import { baddie } from "../baddie.js";
 
 declare const PIXI: any;
 
-export const factory = (app, bump) => {
+export const factory = (app) => {
 
     const init = () => {
         
@@ -12,7 +13,12 @@ export const factory = (app, bump) => {
     const receive = (message) => {
         
         if (message.type === messages.editorDrawsBlock) {
-            makeBlock(message);
+
+            if (message.blockType === 'block') {
+                makeBlock(message);
+            } else {
+                makeBaddie(message);
+            }
         }
     };
 
@@ -27,7 +33,24 @@ export const factory = (app, bump) => {
     
         app.stage.addChild(sprite);
     
-        const gameObject = block(app, bump, sprite, start.x, start.y);
+        const gameObject = block(app, sprite, start.x, start.y);
+    
+        gameObject.init();
+        messenger.subscribe(gameObject);
+    };
+
+    const makeBaddie = ({start, end}) => {
+        let graphics = new PIXI.Graphics();
+        graphics.beginFill(0xDD4433);
+        graphics.drawRect(0, 0, (end.x - start.x), (end.y - start.y));
+        graphics.endFill();
+    
+        const texture = app.renderer.generateTexture(graphics);
+        const sprite = new PIXI.Sprite(texture);
+    
+        app.stage.addChild(sprite);
+    
+        const gameObject = baddie(sprite, start.x, start.y);
     
         gameObject.init();
         messenger.subscribe(gameObject);

@@ -1,4 +1,5 @@
 import { GameObjectCreator } from "./types/GameObjectCreator.js";
+import { messenger, messages } from "./helpers/messenger.js";
 
 declare const PIXI: any;
 
@@ -15,6 +16,11 @@ export const bit: GameObjectCreator = (app, sprite, _) => {
     
     const update = () => {
         sprite.x += speed.x;
+
+        messenger.dispatch({
+            type: messages.bitFinishedMoving,
+            sprite
+        })
     };
 
     const receive = () => {
