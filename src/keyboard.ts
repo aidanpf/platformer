@@ -62,5 +62,5 @@ const keyboard: Keyboard = (value: string) => {
 export const right = keyboard("ArrowRight");
 export const left = keyboard("ArrowLeft");
 export const up = keyboard("ArrowUp");
-export const B = keyboard("B");
+export const e = keyboard("e");
 export const down = keyboard("ArrowDown");
