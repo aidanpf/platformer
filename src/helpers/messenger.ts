@@ -74,5 +74,6 @@ export enum messages {
     bobBeginsOverlapWithBlock = 'bob begins overlap with block',
     allFinishSubscribing = 'all finish subscribing',
     bitFinishedMoving = 'bit finished moving',
-    bobInitiatesConversation = 'bob initiates conversation'
+    bobInitiatesConversation = 'bob initiates conversation',
+    bobCollidesWithBouncer = 'bob colliders with bouncer'
 }

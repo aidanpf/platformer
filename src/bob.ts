@@ -101,6 +101,12 @@ export const bob: GameObjectCreator = (app, sprite, resources) => {
         if (message.type === messages.bobBeginsOverlapWithBlock) {
             moveOutOfBlock(message);
         }
+
+        
+        if (message.type === messages.bobCollidesWithBouncer) {
+            speed.y = -28;
+            canJump = false;
+        }
     };
 
     init();
