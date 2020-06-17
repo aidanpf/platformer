@@ -46,10 +46,7 @@ export const messenger = (() => {
     ;
 
     const dispatch = (message: Message) => {
-
-        if (debugMode) {
-            console.log(message);
-        }
+        log(message);
 
         subscribers.forEach(subscriber =>
             subscriber.receive(message)
@@ -68,12 +65,23 @@ export const waitForAllSubscribed = (message: Message) => ({
 });
 
 export enum messages {
-    editorDrawsBlock = 'editor draws block',
+    editorDrawsEntity = 'editor draws entity',
     bobFinishesMoving = 'bob finishes moving',
     bobFinishesCollisionResolution = 'bob finishes collision resolution',
     bobBeginsOverlapWithBlock = 'bob begins overlap with block',
     allFinishSubscribing = 'all finish subscribing',
     bitFinishedMoving = 'bit finished moving',
     bobInitiatesConversation = 'bob initiates conversation',
-    bobCollidesWithBouncer = 'bob colliders with bouncer'
+    bobCollidesWithBouncer = 'bob colliders with bouncer',
+    gameRequestsBobToSpawn = 'game requests bob to spawn',
+    bitFired = 'bit fired',
+    bobDies = 'bob dies'
 }
+
+// These block up the console when debugging
+const log = (message: Message) => {
+    if (debugMode && !debugBlacklist.find(item => item === message.type)) {
+        console.log(message);
+    }
+}
+const debugBlacklist = [messages.bobFinishesCollisionResolution, messages.bobBeginsOverlapWithBlock, messages.bobFinishesMoving];

@@ -1,13 +1,12 @@
-import { gravity, jumpPower, movementSpeed } from "./data.js";
+import { gravity, jumpPower, movementSpeed, bouncePower } from "./data.js";
 import { right, left, up, down } from "./keyboard.js";
 import { getSides } from "./helpers/sprites.js";
-import { GameObjectCreator } from "./types/GameObjectCreator.js";
-import { bit } from "./bit.js";
-import { initGameObjectWithGraphics } from "./setup.js";
 import { messenger, messages } from "./helpers/messenger.js";
 import { diffCoords } from "./helpers/coords.js";
 
-export const bob: GameObjectCreator = (app, sprite, resources) => {
+export const bob = (app, sprite) => {
+    let dead = false;
+    let unsubscribe: Function;
 
     const speed = {
         x: 0,
@@ -17,21 +16,45 @@ export const bob: GameObjectCreator = (app, sprite, resources) => {
     let canJump = false;
 
     const dimensions = {
-        x: resources.bob.texture.width,
-        y: resources.bob.texture.height
+        x: sprite.texture.width,
+        y: sprite.texture.height
     };
 
     const init = () => {
+
+        sprite.x = 0;
+        sprite.y = 0;
+
         app.ticker.add(update);
         down.press = () => {
             const {x, y} = dimensions;
-            initGameObjectWithGraphics(app, bit, 'bit', resources, sprite.x + x, sprite.y + y/2)
+
+            messenger.dispatch({
+                type: messages.bitFired,
+                x: sprite.x + x,
+                y: sprite.y + y/2
+            });
         };
     };
     
     const update = () => {
         const previousPosition = {x: sprite.x, y: sprite.y};
-    
+        
+        takeInput();
+        fall();
+
+        messenger.dispatch({
+            type: messages.bobFinishesMoving,
+            sprite,
+            previousPosition
+        });
+    };
+
+    const takeInput = () => {
+        if (dead) {
+            return;
+        }
+
         if(right.isDown) {
             sprite.x += movementSpeed;
         }
@@ -44,14 +67,6 @@ export const bob: GameObjectCreator = (app, sprite, resources) => {
             speed.y = -jumpPower;
             canJump = false;
         }
-
-        fall();
-
-        messenger.dispatch({
-            type: messages.bobFinishesMoving,
-            sprite,
-            previousPosition
-        });
     };
     
     const fall = () => {
@@ -59,7 +74,7 @@ export const bob: GameObjectCreator = (app, sprite, resources) => {
         sprite.y += speed.y;
     };
 
-    const moveOutOfBlock = ({block, previousPosition}) => {
+    const moveOutOfBlock = ({block, previousPosition, entityType}) => {
 
         const diff = diffCoords(sprite, previousPosition);
 
@@ -77,15 +92,21 @@ export const bob: GameObjectCreator = (app, sprite, resources) => {
         const previouslyBelowBlock = bobSides.top > blockSides.bottom;
 
 
-        if (movingRight && previouslyToLeftOfBlock) {
+        if (movingRight && previouslyToLeftOfBlock && entityType != 'jump through block') {
             sprite.x = (block.x - sprite.texture.width - 0.1);
-        } else if (movingDown && previouslyAboveBlock) {
+        } 
+        
+        if (movingDown && previouslyAboveBlock) {
             sprite.y = (block.y - sprite.texture.height - 0.1);
             speed.y = 0;
             canJump = true;
-        } else if (movingLeft && previouslyToRightOfBlock) {
+        } 
+
+        if (movingLeft && previouslyToRightOfBlock && entityType != 'jump through block') {
             sprite.x = (blockSides.right + 0.1);
-        } else if (movingUp && previouslyBelowBlock) {
+        } 
+        
+        if (movingUp && previouslyBelowBlock && entityType != 'jump through block') {
             sprite.y = (blockSides.bottom + 0.1);
             speed.y = 0;
         }
@@ -97,20 +118,38 @@ export const bob: GameObjectCreator = (app, sprite, resources) => {
         });
     };
 
+    const destroy = () => {
+        app.ticker.remove(update);
+        unsubscribe();
+        messenger.dispatch({
+            type: messages.gameRequestsBobToSpawn
+        })
+        sprite.destroy(true);
+    };
+
+    const receiveUnsubscribe = (_unsubscribe: Function) => {
+        unsubscribe = _unsubscribe;
+    };
+
     const receive = (message) => {
-        if (message.type === messages.bobBeginsOverlapWithBlock) {
+        if (message.type === messages.bobBeginsOverlapWithBlock && !dead) {
             moveOutOfBlock(message);
         }
 
-        
         if (message.type === messages.bobCollidesWithBouncer) {
-            speed.y = -28;
+            speed.y = -bouncePower;
             canJump = false;
+        }
+
+        if (message.type === messages.bobDies && !dead) {
+            dead = true;
+            speed.y = -15;
+            setTimeout(destroy, 1000 * 2)
         }
     };
 
     init();
 
-    return {receive};
+    return {receive, receiveUnsubscribe};
 };
 

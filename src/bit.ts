@@ -1,9 +1,8 @@
-import { GameObjectCreator } from "./types/GameObjectCreator.js";
 import { messenger, messages } from "./helpers/messenger.js";
 
 declare const PIXI: any;
 
-export const bit: GameObjectCreator = (app, sprite, _) => {
+export const bit = (app, sprite, x, y) => {
 
     const speed = {
         x: 10,
@@ -11,6 +10,8 @@ export const bit: GameObjectCreator = (app, sprite, _) => {
     }
 
     const init = () => {
+        sprite.x = x;
+        sprite.y = y;
         app.ticker.add(update);
     };
     

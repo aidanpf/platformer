@@ -1,22 +1,12 @@
 import { Message, messages, messenger } from "./helpers/messenger.js";
 import { bump } from "./helpers/bump.js";
-import { e } from "./keyboard.js";
 
 export const baddie = (sprite, x, y) => {
     let unsubscribe: Function;
-    let collidingWithBob = false;
     
     const init = () => {
         sprite.x = x;
         sprite.y = y;
-
-        e.press = () => {
-            if (collidingWithBob) {
-                messenger.dispatch({
-                    type: messages.bobInitiatesConversation
-                })
-            }
-        };
     };
 
     const receive = (message: Message) => {
@@ -27,7 +17,11 @@ export const baddie = (sprite, x, y) => {
         }
 
         if (message.type === messages.bobFinishesMoving) {
-            collidingWithBob = bump.hit(sprite, message.sprite);
+            if(bump.hit(sprite, message.sprite)) {
+                messenger.dispatch({
+                    type: messages.bobDies
+                })
+            }
         }
     };
 

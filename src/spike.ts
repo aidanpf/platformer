@@ -1,8 +1,7 @@
 import { messages, messenger } from "./helpers/messenger.js";
 import { bump } from "./helpers/bump.js";
-import { EntityTypes } from "./editor.js";
 
-export const block = (_, sprite, x, y, entityType: EntityTypes) => {
+export const spike = (sprite, x, y) => {
     
     const receive = (message) => {
         if (message.type === messages.bobFinishesMoving) {
@@ -10,10 +9,7 @@ export const block = (_, sprite, x, y, entityType: EntityTypes) => {
 
             if (overlapping) {
                 messenger.dispatch({
-                    type: messages.bobBeginsOverlapWithBlock,
-                    block: sprite,
-                    entityType,
-                    previousPosition: message.previousPosition
+                    type: messages.bobDies
                 })
             }
         }
