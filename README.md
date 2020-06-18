@@ -1,4 +1,4 @@
-Simple platform game made with Typescript, Webpack, Babel etc.
+Simple platform game and level editor made with Typescript, Webpack, Babel etc.
 
 - PixiJS used for Rendering
 - Messaging system used to keep down complexity
