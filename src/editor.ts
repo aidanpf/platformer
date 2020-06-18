@@ -1,5 +1,4 @@
 import { messenger, messages, waitForAllSubscribed, Message } from "./helpers/messenger.js";
-import { conversation } from "./conversation.js";
 
 declare const PIXI: any;
 
