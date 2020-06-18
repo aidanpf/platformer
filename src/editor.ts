@@ -1,4 +1,5 @@
 import { messenger, messages, waitForAllSubscribed, Message } from "./helpers/messenger.js";
+import { conversation } from "./conversation.js";
 
 declare const PIXI: any;
 
@@ -27,18 +28,30 @@ export const editor = (app) => {
         addEntity({x: -100, y: 41}, {x: 1200, y: 81});
 
         [...document.querySelectorAll('.js-select-block-type button')].forEach(button =>
-            button.addEventListener('click', e => {
-                entityType = (e.target as HTMLButtonElement).dataset['type']!;
-            })
+            button.addEventListener('click', e => 
+                setEntityType((e.target as HTMLButtonElement).dataset['type']!)
+            )
         );
     }
     
+    const setEntityType = (_entityType: string) => {
+        entityType = _entityType;
+        document.querySelector('.js-editor-content-container')?.classList.toggle('hidden', entityType !== 'npc');
+    }
+
+    const conversation = (entityType) => (
+        entityType === 'npc' 
+        ? {conversation: (document.querySelector('.js-editor-content') as HTMLTextAreaElement).value.split('\n')}
+        : {}
+    );
+
     const addEntity = (start: Coordinates, end: Coordinates) => 
         messenger.dispatch({
             type: messages.editorDrawsEntity,
             entityType,
             start,
-            end
+            end,
+            ...conversation(entityType)
         })
     ;
 

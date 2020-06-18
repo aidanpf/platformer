@@ -3,6 +3,7 @@ import {createApp} from "./setup.js";
 import { factory } from "./factory.js";
 import { messenger, messages } from "./helpers/messenger.js";
 import { camera } from "./camera.js";
+import { conversation } from "./conversation.js";
 
 declare const PIXI: any;
 
@@ -14,7 +15,8 @@ app.loader.add('bit', `textures/bit.png`);
 messenger.subscribe(
     camera(app),
     factory(app),
-    editor(app)
+    editor(app),
+    conversation(app)
 );
 
 messenger.dispatch({

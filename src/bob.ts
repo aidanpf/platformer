@@ -6,6 +6,7 @@ import { diffCoords } from "./helpers/coords.js";
 
 export const bob = (app, sprite) => {
     let dead = false;
+    let inConversation = false;
     let unsubscribe: Function;
 
     const speed = {
@@ -51,7 +52,7 @@ export const bob = (app, sprite) => {
     };
 
     const takeInput = () => {
-        if (dead) {
+        if (dead || inConversation) {
             return;
         }
 
@@ -145,6 +146,14 @@ export const bob = (app, sprite) => {
             dead = true;
             speed.y = -15;
             setTimeout(destroy, 1000 * 2)
+        }
+
+        if (message.type === messages.bobInitiatesConversation) {
+            inConversation = true;
+        }
+
+        if (message.type === messages.conversationEnds) {
+            inConversation = false;
         }
     };
 

@@ -75,7 +75,9 @@ export enum messages {
     bobCollidesWithBouncer = 'bob colliders with bouncer',
     gameRequestsBobToSpawn = 'game requests bob to spawn',
     bitFired = 'bit fired',
-    bobDies = 'bob dies'
+    bobDies = 'bob dies',
+    conversationEnds = 'conversation ends',
+    inputOccurs = 'input occurs'
 }
 
 // These block up the console when debugging

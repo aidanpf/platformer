@@ -1,26 +1,37 @@
 import { Message, messages, messenger } from "./helpers/messenger.js";
 import { bump } from "./helpers/bump.js";
-import { e } from "./keyboard.js";
 
-export const npc = (sprite, x, y) => {
+export const npc = (sprite, x, y, conversation: string[]) => {
     let collidingWithBob = false;
-    
+    let inConversation = false;
+
     const init = () => {
         sprite.x = x;
         sprite.y = y;
 
-        e.press = () => {
-            if (collidingWithBob) {
-                messenger.dispatch({
-                    type: messages.bobInitiatesConversation
-                })
-            }
-        };
+        if (conversation.length === 1 && conversation[0] === '') {
+            conversation[0] = '[Empty conversation supplied in editor]'
+        }
     };
 
     const receive = (message: Message) => {
         if (message.type === messages.bobFinishesMoving) {
             collidingWithBob = bump.hit(sprite, message.sprite);
+        }
+
+        if (message.type === messages.conversationEnds) {
+            inConversation = false;
+        }
+
+        if (message.type === messages.inputOccurs && message.key === 'e') {
+            if (collidingWithBob && !inConversation) {
+                inConversation = true;
+                messenger.dispatch({
+                    type: messages.bobInitiatesConversation,
+                    conversation,
+                    sprite
+                })
+            }
         }
     };
 

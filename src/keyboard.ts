@@ -1,3 +1,5 @@
+import { messenger, messages } from "./helpers/messenger.js";
+
 interface Key {
   value: string;
   isDown: boolean;
@@ -19,7 +21,6 @@ const keyboard: Keyboard = (value: string) => {
         }
         key.isDown = true;
         key.isUp = false;
-        event.preventDefault();
       }
     };
 
@@ -30,7 +31,6 @@ const keyboard: Keyboard = (value: string) => {
         }
         key.isDown = false;
         key.isUp = true;
-        event.preventDefault();
       }
     };
 
@@ -53,7 +53,7 @@ const keyboard: Keyboard = (value: string) => {
       "keydown", downListener, false
     );
     window.addEventListener(
-      "keyup", upListener, false
+      "keyup", upListener
     );
     
     return key;
@@ -63,4 +63,12 @@ export const right = keyboard("ArrowRight");
 export const left = keyboard("ArrowLeft");
 export const up = keyboard("ArrowUp");
 export const e = keyboard("e");
+export const d = keyboard("d");
 export const down = keyboard("ArrowDown");
+
+e.press = () => {
+  messenger.dispatch({
+      type: messages.inputOccurs,
+      key: 'e'
+  });
+};

@@ -11,6 +11,7 @@ import { npc } from "./npc.js";
 declare const PIXI: any;
 
 export const factory = (app) => {
+    let entities: any[] = [];
 
     const init = () => {
         
@@ -19,6 +20,10 @@ export const factory = (app) => {
     const receive = (message) => {
         
         if (message.type === messages.editorDrawsEntity) {
+            entities.push(message);
+
+            console.log(entities);
+
             const entityType: EntityTypes = message.entityType;
             if (entityType === 'block' || entityType === 'jump through block') {
                 makeBlock(message, entityType);
@@ -105,10 +110,10 @@ export const factory = (app) => {
         messenger.subscribe(gameObject);
     };
 
-    const makeNpc = ({start, end}) => {
+    const makeNpc = ({start, end, conversation}) => {
         const {sprite} = rectangle(app, start.x - end.x, start.y - end.y, 0x3355DD);
         app.stage.addChild(sprite);
-        const gameObject = npc(sprite, start.x, start.y);
+        const gameObject = npc(sprite, start.x, start.y, conversation);
         gameObject.init();
         messenger.subscribe(gameObject);
     };
