@@ -22,7 +22,7 @@ export const factory = (app) => {
         if (message.type === messages.editorDrawsEntity) {
             entities.push(message);
 
-            console.log(entities);
+            localStorage.setItem('entities', JSON.stringify(entities));
 
             const entityType: EntityTypes = message.entityType;
             if (entityType === 'block' || entityType === 'jump through block') {

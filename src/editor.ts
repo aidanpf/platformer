@@ -24,6 +24,8 @@ export const editor = (app) => {
             addEntity(blockStart, clickCoords(e))
         );
 
+        loadLevel();
+
         addEntity({x: -100, y: 41}, {x: 1200, y: 81});
 
         [...document.querySelectorAll('.js-select-block-type button')].forEach(button =>
@@ -31,8 +33,29 @@ export const editor = (app) => {
                 setEntityType((e.target as HTMLButtonElement).dataset['type']!)
             )
         );
+
+        document.querySelector('.js-toggle-level-editor-button')?.addEventListener('click', () =>
+            document.querySelector('.js-editor')?.classList.toggle('hidden')
+        );
+
+        document.querySelector('.js-delete-level')?.addEventListener('click', () => {
+            localStorage.removeItem('entities');
+            location.reload();
+        });
     }
     
+    const loadLevel = () => {
+        let entitiesString = localStorage.getItem('entities');
+
+        if(entitiesString) {
+            let entities: any[] = JSON.parse(entitiesString);
+
+            entities.forEach(entity =>
+                messenger.dispatch(entity)
+            );
+        }
+    };
+
     const setEntityType = (_entityType: string) => {
         entityType = _entityType;
         document.querySelector('.js-editor-content-container')?.classList.toggle('hidden', entityType !== 'npc');

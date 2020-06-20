@@ -2,25 +2,25 @@ import { Message, messages, messenger } from "./helpers/messenger.js";
 declare const PIXI: any;
 
 export const conversation = (app) => {
-    let text = new PIXI.Text('Hi', { font: '35px Snippet', fill: 'white', align: 'left' });
-    text.visible = false;
+    let graphic = new PIXI.Text('Hi', { font: '35px Snippet', fill: 'white', align: 'left' });
+    graphic.visible = false;
     let inConversation = false;
     let conversation = ['None'];
     let currentConversationId = 0;
     
     const init = () => {
-        app.stage.addChild(text);
+        app.stage.addChild(graphic);
     };
 
     const advanceConversation = () => {
         
         if (currentConversationId <= conversation.length - 1) {
-            text.text = conversation[currentConversationId];
+            graphic.text = conversation[currentConversationId];
             currentConversationId++;
         } else {
             currentConversationId = 0;
             inConversation = false;
-            text.text = '';
+            graphic.text = '';
             onNextTick(() => messenger.dispatch({
                 type: messages.conversationEnds
             }));
@@ -32,9 +32,9 @@ export const conversation = (app) => {
             conversation = message.conversation;
             currentConversationId = 0;
             advanceConversation();
-            text.x = message.sprite.x;
-            text.y = message.sprite.y - 50;
-            text.visible = true;
+            graphic.x = message.sprite.x;
+            graphic.y = message.sprite.y - 50;
+            graphic.visible = true;
             inConversation = true;
         }
 
