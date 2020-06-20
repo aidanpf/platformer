@@ -9,9 +9,6 @@ declare const PIXI: any;
 
 const app = createApp();
 
-app.loader.add('bob', `textures/bob.png`);
-app.loader.add('bit', `textures/bit.png`);
-
 messenger.subscribe(
     camera(app),
     factory(app),

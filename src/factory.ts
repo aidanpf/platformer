@@ -12,6 +12,7 @@ declare const PIXI: any;
 
 export const factory = (app) => {
     let entities: any[] = [];
+    const bobSprite = PIXI.Sprite.from('textures/bob.png');
 
     const init = () => {
         
@@ -119,17 +120,19 @@ export const factory = (app) => {
     };
 
     const makeBob = () => {
-        const {sprite} = rectangle(app, 40, 40, 0xEEEEEE);
     
-        app.stage.addChild(sprite);
+        
+        bobSprite.angle = 12;
+        app.stage.addChild(bobSprite);
     
-        const gameObject = bob(app, sprite);
+        const gameObject = bob(app, bobSprite);
     
         messenger.subscribe(gameObject);
     };
     
     const makeBit = ({x, y}) => {
         const {sprite} = rectangle(app, 4, 4, 0x00DD55);
+        
     
         const gameObject = bit(app, sprite, x, y);
         

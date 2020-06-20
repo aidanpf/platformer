@@ -44,11 +44,13 @@ export const bob = (app, sprite) => {
         takeInput();
         fall();
 
-        messenger.dispatch({
-            type: messages.bobFinishesMoving,
-            sprite,
-            previousPosition
-        });
+        if(!dead) {
+            messenger.dispatch({
+                type: messages.bobFinishesMoving,
+                sprite,
+                previousPosition
+            });
+        }
     };
 
     const takeInput = () => {
@@ -125,7 +127,6 @@ export const bob = (app, sprite) => {
         messenger.dispatch({
             type: messages.gameRequestsBobToSpawn
         })
-        sprite.destroy(true);
     };
 
     const receiveUnsubscribe = (_unsubscribe: Function) => {

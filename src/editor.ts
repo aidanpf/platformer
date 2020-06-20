@@ -26,7 +26,7 @@ export const editor = (app) => {
 
         loadLevel();
 
-        addEntity({x: -100, y: 41}, {x: 1200, y: 81});
+        addEntity({x: -100, y: 121}, {x: 1200, y: 161});
 
         [...document.querySelectorAll('.js-select-block-type button')].forEach(button =>
             button.addEventListener('click', e => 
