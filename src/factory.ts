@@ -12,8 +12,6 @@ declare const PIXI: any;
 
 export const factory = (app) => {
     let entities: any[] = [];
-    const bobSprite = PIXI.Sprite.from('textures/bob.png');
-
     const init = () => {
         
     };
@@ -120,8 +118,8 @@ export const factory = (app) => {
     };
 
     const makeBob = () => {
-    
-        
+        const bobSprite = PIXI.Sprite.from(PIXI.utils.BaseTextureCache.bob.resource);
+
         bobSprite.angle = 12;
         app.stage.addChild(bobSprite);
     

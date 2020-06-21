@@ -9,17 +9,24 @@ declare const PIXI: any;
 
 const app = createApp();
 
-messenger.subscribe(
-    camera(app),
-    factory(app),
-    editor(app),
-    conversation(app)
-);
+app.loader.add('bob', 'textures/bob.png');
 
-messenger.dispatch({
-    type: messages.allFinishSubscribing
+app.loader.load(() => {
+
+    messenger.subscribe(
+        camera(app),
+        factory(app),
+        editor(app),
+        conversation(app)
+    );
+    
+    messenger.dispatch({
+        type: messages.allFinishSubscribing
+    });
+    
+    messenger.dispatch({
+        type: messages.gameRequestsBobToSpawn
+    });
+    
 });
 
-messenger.dispatch({
-    type: messages.gameRequestsBobToSpawn
-});
