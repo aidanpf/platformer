@@ -77,7 +77,9 @@ export enum messages {
     bitFired = 'bit fired',
     bobDies = 'bob dies',
     conversationEnds = 'conversation ends',
-    inputOccurs = 'input occurs'
+    inputOccurs = 'input occurs',
+    baddieDies = 'baddie dies',
+    bobCollidesWithCoin = 'bob collides with coin'
 }
 
 // These block up the console when debugging
@@ -86,4 +88,4 @@ const log = (message: Message) => {
         console.log(message);
     }
 }
-const debugBlacklist = [messages.bobFinishesCollisionResolution, messages.bobBeginsOverlapWithBlock, messages.bobFinishesMoving];
+const debugBlacklist = [messages.bobFinishesCollisionResolution, messages.bobBeginsOverlapWithBlock, messages.bobFinishesMoving, messages.bitFinishedMoving];

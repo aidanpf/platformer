@@ -12,6 +12,10 @@ export const baddie = (sprite, x, y) => {
     const receive = (message: Message) => {
         if (message.type === messages.bitFinishedMoving) {
             if (bump.hit(message.sprite, sprite)) {
+                messenger.dispatch({
+                    type: messages.baddieDies,
+                    sprite
+                })
                 destroy();
             }
         }

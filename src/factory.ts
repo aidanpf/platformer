@@ -7,6 +7,7 @@ import { spike } from "./spike.js";
 import { bob } from "./bob.js";
 import { bit } from "./bit.js";
 import { npc } from "./npc.js";
+import { coin } from "./coin.js";
 
 declare const PIXI: any;
 
@@ -43,6 +44,10 @@ export const factory = (app) => {
 
         if (message.type === messages.bitFired) {
             makeBit(message);
+        }
+
+        if (message.type === messages.baddieDies) {
+            makeCoin(message.sprite);
         }
     };
 
@@ -126,13 +131,16 @@ export const factory = (app) => {
     
         messenger.subscribe(gameObject);
     };
+
+    const makeCoin = ({x, y}) => {
+        const {sprite} = rectangle(app, 10, 10, 0xEEEE22);
+        app.stage.addChild(sprite);
+        coin(sprite, x, y);
+    };
     
     const makeBit = ({x, y}) => {
         const {sprite} = rectangle(app, 4, 4, 0x00DD55);
-        
-    
         const gameObject = bit(app, sprite, x, y);
-        
         app.stage.addChild(sprite);
         messenger.subscribe(gameObject);
     };
