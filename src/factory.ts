@@ -120,7 +120,6 @@ export const factory = (app) => {
     const makeBob = () => {
         const bobSprite = PIXI.Sprite.from(PIXI.utils.BaseTextureCache.bob.resource);
 
-        bobSprite.angle = 12;
         app.stage.addChild(bobSprite);
     
         const gameObject = bob(app, bobSprite);

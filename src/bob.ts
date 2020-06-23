@@ -60,6 +60,7 @@ export const bob = (app, sprite) => {
 
         if(right.isDown) {
             sprite.x += movementSpeed;
+            sprite.scale.x = 1;
         }
     
         if (left.isDown) {
