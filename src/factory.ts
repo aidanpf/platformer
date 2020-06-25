@@ -135,7 +135,9 @@ export const factory = (app) => {
     const makeCoin = ({x, y}) => {
         const {sprite} = rectangle(app, 10, 10, 0xEEEE22);
         app.stage.addChild(sprite);
-        coin(sprite, x, y);
+        const gameObject = coin(sprite, x, y);
+        messenger.subscribe(gameObject);
+
     };
     
     const makeBit = ({x, y}) => {

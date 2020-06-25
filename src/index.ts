@@ -1,13 +1,9 @@
 import {editor} from "./editor.js";
-import {createApp} from "./setup.js";
 import { factory } from "./factory.js";
 import { messenger, messages } from "./helpers/messenger.js";
 import { camera } from "./camera.js";
 import { conversation } from "./conversation.js";
-
-declare const PIXI: any;
-
-const app = createApp();
+import { app } from "./setup.js";
 
 app.loader.add('bob', 'textures/bob.png');
 
