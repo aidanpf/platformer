@@ -7,7 +7,7 @@ export type Messenger = {
 
 export type Subscriber  = {
     receive: (message) => void;
-    receiveUnsubscribe?: (unsubscribe: Function) => void;
+    unsubscriber?: ReturnType<typeof Unsubscriber>;
 }
 
 export interface StoredSubscriber extends Subscriber {
@@ -37,8 +37,8 @@ export const messenger = (() => {
 
     const giveUnsubscribe = (storedSubscribers: StoredSubscriber[]) => 
         storedSubscribers.forEach(s => {
-            if (s.receiveUnsubscribe) {
-                s.receiveUnsubscribe(() => {
+            if (s.unsubscriber) {
+                s.unsubscriber.setUnsubscribe(() => {
                     subscribers = subscribers.filter(t => t.id !== s.id);
                 })
             }
@@ -81,6 +81,19 @@ export enum messages {
     baddieDies = 'baddie dies',
     bobCollidesWithCoin = 'bob collides with coin'
 }
+
+export const Unsubscriber = () => {
+    let unsubscribe;
+
+    const setUnsubscribe = (_unsubscribe) => {
+        unsubscribe = _unsubscribe;
+    }
+
+    return {
+        setUnsubscribe,
+        unsubscribe: () => unsubscribe
+    }
+};
 
 // These block up the console when debugging
 const log = (message: Message) => {

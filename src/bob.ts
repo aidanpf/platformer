@@ -1,13 +1,13 @@
 import { gravity, jumpPower, movementSpeed, bouncePower } from "./data.js";
 import { right, left, up, down } from "./keyboard.js";
 import { getSides } from "./helpers/sprites.js";
-import { messenger, messages } from "./helpers/messenger.js";
+import { messenger, messages, Unsubscriber } from "./helpers/messenger.js";
 import { diffCoords } from "./helpers/coords.js";
 
 export const bob = (app, sprite) => {
     let dead = false;
     let inConversation = false;
-    let unsubscribe: Function;
+    const unsubscriber = Unsubscriber();
 
     const speed = {
         x: 0,
@@ -124,14 +124,10 @@ export const bob = (app, sprite) => {
 
     const destroy = () => {
         app.ticker.remove(update);
-        unsubscribe();
+        unsubscriber.unsubscribe()();
         messenger.dispatch({
             type: messages.gameRequestsBobToSpawn
         })
-    };
-
-    const receiveUnsubscribe = (_unsubscribe: Function) => {
-        unsubscribe = _unsubscribe;
     };
 
     const receive = (message) => {
@@ -161,6 +157,6 @@ export const bob = (app, sprite) => {
 
     init();
 
-    return {receive, receiveUnsubscribe};
+    return {receive, unsubscriber};
 };
 

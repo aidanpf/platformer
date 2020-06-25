@@ -1,8 +1,8 @@
-import { Message, messages, messenger } from "./helpers/messenger.js";
+import { Message, messages, messenger, Unsubscriber } from "./helpers/messenger.js";
 import { bump } from "./helpers/bump.js";
 
 export const baddie = (sprite, x, y) => {
-    let unsubscribe: Function;
+    const unsubscriber = Unsubscriber();
     
     const init = () => {
         sprite.x = x;
@@ -28,15 +28,11 @@ export const baddie = (sprite, x, y) => {
             }
         }
     };
-
-    const receiveUnsubscribe = (_unsubscribe: Function) => {
-        unsubscribe = _unsubscribe;
-    };
-
+    
     const destroy = () => {
         sprite.destroy(true);
-        unsubscribe();
+        unsubscriber.unsubscribe()();
     };
 
-    return {receive, init, receiveUnsubscribe};
+    return {receive, init, unsubscriber};
 };

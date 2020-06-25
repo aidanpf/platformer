@@ -1,4 +1,4 @@
-import { Message, messages, messenger } from "./helpers/messenger.js";
+import { Message, messages, messenger, Unsubscriber } from "./helpers/messenger.js";
 import { collidingWithBob } from "./helpers/collisions.js";
 import { speedYBehaviour } from "./helpers/speed.js";
 import { Frame } from "./helpers/frame.js";
@@ -10,7 +10,7 @@ export const coin = (sprite, x, y) => {
         speedY.update();
         sprite.y += speedY.value();
     });
-    let unsubscribe;
+    const unsubscriber = Unsubscriber();
     const spriteManager = Sprite(sprite, x, y);
 
     const receive = (message: Message) => {
@@ -22,15 +22,11 @@ export const coin = (sprite, x, y) => {
        }
     };
 
-    const receiveUnsubscribe = (_unsubscribe: Function) => {
-        unsubscribe = _unsubscribe;
-    };
-
     const destroy = () => {
         spriteManager.destroy();
         frame.destroy();
-        unsubscribe();
+        unsubscriber.unsubscribe()();
     };
 
-    return {receive, receiveUnsubscribe};
+    return {receive, unsubscriber};
 };
