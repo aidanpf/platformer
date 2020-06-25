@@ -79,7 +79,9 @@ export enum messages {
     conversationEnds = 'conversation ends',
     inputOccurs = 'input occurs',
     baddieDies = 'baddie dies',
-    bobCollidesWithCoin = 'bob collides with coin'
+    bobCollidesWithCoin = 'bob collides with coin',
+    coinFinishingMoving = 'coin finishing moving',
+    coinCollidesWithFloor = 'coin collides with floor'
 }
 
 export const Unsubscriber = () => {
@@ -101,4 +103,4 @@ const log = (message: Message) => {
         console.log(message);
     }
 }
-const debugBlacklist = [messages.bobFinishesCollisionResolution, messages.bobBeginsOverlapWithBlock, messages.bobFinishesMoving, messages.bitFinishedMoving];
+const debugBlacklist = [messages.bobFinishesCollisionResolution, messages.bobBeginsOverlapWithBlock, messages.bobFinishesMoving, messages.bitFinishedMoving, messages.coinFinishingMoving];

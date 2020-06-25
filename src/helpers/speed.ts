@@ -9,5 +9,9 @@ export const speedYBehaviour = ({init = 0, gravity = 0.5, max = 10}) => {
         }
     };
 
-    return {update, value: () => value};
+    return {
+        update, 
+        value: () => value,
+        set: (_value) => {value = _value;}
+    };
 };

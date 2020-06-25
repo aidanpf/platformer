@@ -17,6 +17,15 @@ export const block = (_, sprite, x, y, entityType: EntityTypes) => {
                 })
             }
         }
+
+        if (message.type === messages.coinFinishingMoving) {
+            if(bump.hit(message.sprite, sprite)) {
+                messenger.dispatch({
+                    type: messages.coinCollidesWithFloor,
+                    id: message.id
+                });
+            }
+        }
     };
 
     const init = () => {
