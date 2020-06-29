@@ -1,17 +1,26 @@
-export const speedYBehaviour = ({init = 0, gravity = 0.5, max = 10}) => {
-    let value = init;
+export const gravityBehaviour = ({initialSpeed = 0, gravity = 0.5, max = 10}) => {
+    let speed = initialSpeed;
+    let lastPosition = null;
 
-    const update = () => {
-        value += gravity;
+    const apply = () => {
+        speed += gravity;
 
-        if (value > max) {
-            value = max;
+        if (speed > max) {
+            speed = max;
         }
     };
 
+    const nextY = (currentY) => {
+        lastPosition = currentY;
+        return currentY + speed;
+    };
+
     return {
-        update, 
-        value: () => value,
-        set: (_value) => {value = _value;}
+        apply, 
+        speed: () => speed,
+        setSpeed: (_speed) => {speed = _speed;},
+        setGravity: (_gravity) => {gravity = _gravity;},
+        nextY,
+        lastPosition: () => lastPosition
     };
 };

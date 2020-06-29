@@ -1,8 +1,7 @@
 import { gravity, jumpPower, movementSpeed, bouncePower } from "./data.js";
 import { right, left, up, down } from "./keyboard.js";
-import { getSides } from "./helpers/sprites.js";
 import { messenger, messages, Unsubscriber } from "./helpers/messenger.js";
-import { diffCoords } from "./helpers/coords.js";
+import { resolveCollision } from "./helpers/collisions.js";
 
 export const bob = (app, sprite) => {
     let dead = false;
@@ -78,50 +77,6 @@ export const bob = (app, sprite) => {
         sprite.y += speed.y;
     };
 
-    const moveOutOfBlock = ({block, previousPosition, entityType}) => {
-
-        const diff = diffCoords(sprite, previousPosition);
-
-        const movingRight = diff.x > 0;
-        const movingDown = diff.y > 0;
-        const movingLeft = diff.x < 0;
-        const movingUp = diff.y < 0;
-
-        const blockSides = getSides(block, block.texture);
-        const bobSides = getSides(previousPosition, sprite.texture);
-
-        const previouslyToLeftOfBlock = bobSides.right < blockSides.left;
-        const previouslyToRightOfBlock = bobSides.left > blockSides.right;
-        const previouslyAboveBlock = bobSides.bottom < blockSides.top;
-        const previouslyBelowBlock = bobSides.top > blockSides.bottom;
-
-
-        if (movingRight && previouslyToLeftOfBlock && entityType != 'jump through block') {
-            sprite.x = (block.x - sprite.texture.width - 0.1);
-        } 
-        
-        if (movingDown && previouslyAboveBlock) {
-            sprite.y = (block.y - sprite.texture.height - 0.1);
-            speed.y = 0;
-            canJump = true;
-        } 
-
-        if (movingLeft && previouslyToRightOfBlock && entityType != 'jump through block') {
-            sprite.x = (blockSides.right + 0.1);
-        } 
-        
-        if (movingUp && previouslyBelowBlock && entityType != 'jump through block') {
-            sprite.y = (blockSides.bottom + 0.1);
-            speed.y = 0;
-        }
-
-        messenger.dispatch({
-            type: messages.bobFinishesCollisionResolution,
-            sprite,
-            previousPosition
-        });
-    };
-
     const destroy = () => {
         app.ticker.remove(update);
         unsubscriber.unsubscribe()();
@@ -153,6 +108,28 @@ export const bob = (app, sprite) => {
         if (message.type === messages.conversationEnds) {
             inConversation = false;
         }
+    };
+
+    const moveOutOfBlock = ({block, previousPosition, entityType}) => {
+
+        const collision = resolveCollision(sprite, {block, previousPosition, entityType});
+        sprite.x = collision.newPosition.x;
+        sprite.y = collision.newPosition.y;
+
+        if (collision.withBelow) {
+            speed.y = 0;
+            canJump = true;
+        }
+
+        if (collision.withAbove) {
+            speed.y = 0;
+        }
+
+        messenger.dispatch({
+            type: messages.bobFinishesCollisionResolution,
+            sprite,
+            previousPosition
+        });
     };
 
     init();

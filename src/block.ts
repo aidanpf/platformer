@@ -22,7 +22,10 @@ export const block = (_, sprite, x, y, entityType: EntityTypes) => {
             if(bump.hit(message.sprite, sprite)) {
                 messenger.dispatch({
                     type: messages.coinCollidesWithFloor,
-                    id: message.id
+                    id: message.id,
+                    block: sprite,
+                    previousPosition: message.previousPosition,
+                    entityType
                 });
             }
         }
