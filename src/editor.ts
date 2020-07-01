@@ -1,4 +1,5 @@
 import { messenger, messages, waitForAllSubscribed, Message } from "./helpers/messenger.js";
+import { app } from "./setup.js";
 
 declare const PIXI: any;
 
@@ -9,7 +10,7 @@ type Coordinates = {
 
 export type EntityTypes = 'baddie' | 'block' |'bouncer' | 'jump through block' | 'spike' | 'npc';
 
-export const editor = (app) => {
+export const editor = () => {
     const clickCoords = (e): Coordinates => ({x: e.data.global.x + app.stage.x + app.stage.pivot.x, y: e.data.global.y + app.stage.y + app.stage.pivot.y});
     let entityType = 'block';
     

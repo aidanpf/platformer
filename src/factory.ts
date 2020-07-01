@@ -8,10 +8,11 @@ import { bob } from "./bob.js";
 import { bit } from "./bit.js";
 import { npc } from "./npc.js";
 import { coin } from "./coin.js";
+import { app } from "./setup.js";
 
 declare const PIXI: any;
 
-export const factory = (app) => {
+export const factory = () => {
     let entities: any[] = [];
     const init = () => {
         

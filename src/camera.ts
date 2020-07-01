@@ -1,6 +1,7 @@
 import { Message, messages } from "./helpers/messenger.js";
+import { app } from "./setup.js";
 
-export const camera = (app) => {
+export const camera = () => {
     
     const receive = (message: Message) => {
         if (message.type === messages.bobFinishesMoving || message.type === messages.bobFinishesCollisionResolution) {

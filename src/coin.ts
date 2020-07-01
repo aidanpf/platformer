@@ -5,6 +5,9 @@ import { Frame } from "./helpers/frame.js";
 import { Sprite } from "./helpers/sprite.js";
 import { Id } from "./helpers/id.js";
 
+const bounceFriction = 2;
+const initialBounceEnergy = 10;
+
 export const coin = (sprite, x, y) => {
     const gravity = gravityBehaviour({initialSpeed: -10, gravity: 0.6, max: 15});
     const id = Id.get();
@@ -34,12 +37,11 @@ export const coin = (sprite, x, y) => {
        }
 
        if (message.type === messages.coinCollidesWithFloor && message.id === id) {
+           const lostBounceEnergy = numberOfBounces * bounceFriction
            
-           if (numberOfBounces < 10) {
-                gravity.setSpeed(-10 + numberOfBounces);
-                console.log(2);
-                numberOfBounces += 2;
-
+           if (lostBounceEnergy < initialBounceEnergy) {
+                gravity.setSpeed(-(initialBounceEnergy - lostBounceEnergy));
+                numberOfBounces ++;
             } else {
                 gravity.setSpeed(0);
             }

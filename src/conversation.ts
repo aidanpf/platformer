@@ -1,7 +1,8 @@
 import { Message, messages, messenger } from "./helpers/messenger.js";
+import { app } from "./setup.js";
 declare const PIXI: any;
 
-export const conversation = (app) => {
+export const conversation = () => {
     let graphic = new PIXI.Text('Hi', { font: '35px Snippet', fill: 'white', align: 'left' });
     graphic.visible = false;
     let inConversation = false;
