@@ -1,9 +1,9 @@
-import { Message, messages, messenger, Unsubscriber } from "./helpers/messenger.js";
-import { collidingWithBob, resolveCollision } from "./helpers/collisions.js";
-import { gravityBehaviour } from "./helpers/speed.js";
-import { Frame } from "./helpers/frame.js";
-import { Sprite } from "./helpers/sprite.js";
-import { Id } from "./helpers/id.js";
+import { Message, messages, messenger, Unsubscriber } from "./helpers/messenger";
+import { collidingWithBob, resolveCollision } from "./helpers/collisions";
+import { gravityBehaviour } from "./helpers/speed";
+import { Frame } from "./helpers/frame";
+import { Sprite } from "./helpers/sprite";
+import { Id } from "./helpers/id";
 
 const bounceFriction = 2;
 const initialBounceEnergy = 10;

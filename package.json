@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
+    "build": "webpack",
+    "watch": "webpack --watch",
     "serve": "http-server ./public"
   },
   "author": "",

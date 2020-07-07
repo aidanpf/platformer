@@ -1,5 +1,5 @@
-import { Message, messages, messenger, Unsubscriber } from "./helpers/messenger.js";
-import { bump } from "./helpers/bump.js";
+import { Message, messages, messenger, Unsubscriber } from "./helpers/messenger";
+import { bump } from "./helpers/bump";
 
 export const baddie = (sprite, x, y) => {
     const unsubscriber = Unsubscriber();

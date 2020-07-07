@@ -1,22 +1,22 @@
-import { messages, messenger } from "./helpers/messenger.js";
-import { block } from "./block.js";
-import { baddie } from "./baddie.js";
-import { bouncer } from "./bouncer.js";
-import { EntityTypes } from "./editor.js";
-import { spike } from "./spike.js";
-import { bob } from "./bob.js";
-import { bit } from "./bit.js";
-import { npc } from "./npc.js";
-import { coin } from "./coin.js";
-import { app } from "./setup.js";
+import { messages, messenger } from "./helpers/messenger";
+import { block } from "./block";
+import { baddie } from "./baddie";
+import { bouncer } from "./bouncer";
+import { EntityTypes } from "./editor";
+import { spike } from "./spike";
+import { bob } from "./bob";
+import { bit } from "./bit";
+import { npc } from "./npc";
+import { coin } from "./coin";
+import { app } from "./setup";
+import { shop } from "./shop";
 
 declare const PIXI: any;
 
+
+
 export const factory = () => {
     let entities: any[] = [];
-    const init = () => {
-        
-    };
 
     const receive = (message) => {
         
@@ -36,6 +36,8 @@ export const factory = () => {
                 makeSpike(message);
             } else if (entityType === 'npc') {
                 makeNpc(message);
+            } else if (entityType === 'shop') {
+                makeShop(message);
             }
         }
 
@@ -133,6 +135,17 @@ export const factory = () => {
         messenger.subscribe(gameObject);
     };
 
+    const makeShop = ({start: {x,y}}) => {
+        const sprite = PIXI.Sprite.from(PIXI.utils.BaseTextureCache.shop.resource);
+        app.stage.addChild(sprite);
+        sprite.x = x;
+        sprite.y = y;
+    
+        const gameObject = shop(sprite);
+    
+        messenger.subscribe(gameObject);
+    };
+
     const makeCoin = ({x, y}) => {
         const {sprite} = rectangle(app, 20, 20, 0xEEEE22);
         app.stage.addChild(sprite);
@@ -147,8 +160,6 @@ export const factory = () => {
         app.stage.addChild(sprite);
         messenger.subscribe(gameObject);
     };
-
-    init();
     
     return {receive};
 };

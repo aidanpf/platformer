@@ -1,4 +1,4 @@
-import { messenger, messages } from "./helpers/messenger.js";
+import { messenger, messages } from "./helpers/messenger";
 
 declare const PIXI: any;
 

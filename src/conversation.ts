@@ -1,5 +1,5 @@
-import { Message, messages, messenger } from "./helpers/messenger.js";
-import { app } from "./setup.js";
+import { Message, messages, messenger } from "./helpers/messenger";
+import { app } from "./setup";
 declare const PIXI: any;
 
 export const conversation = () => {

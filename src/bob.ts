@@ -1,7 +1,7 @@
-import { gravity, jumpPower, movementSpeed, bouncePower } from "./data.js";
-import { right, left, up, down } from "./keyboard.js";
-import { messenger, messages, Unsubscriber } from "./helpers/messenger.js";
-import { resolveCollision } from "./helpers/collisions.js";
+import { gravity, jumpPower, movementSpeed, bouncePower } from "./data";
+import { right, left, up, down } from "./keyboard";
+import { messenger, messages, Unsubscriber } from "./helpers/messenger";
+import { resolveCollision } from "./helpers/collisions";
 
 export const bob = (app, sprite) => {
     let dead = false;

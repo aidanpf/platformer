@@ -1,6 +1,6 @@
-import { messages, messenger } from "./helpers/messenger.js";
-import { bump } from "./helpers/bump.js";
-import { EntityTypes } from "./editor.js";
+import { messages, messenger } from "./helpers/messenger";
+import { bump } from "./helpers/bump";
+import { EntityTypes } from "./editor";
 
 export const block = (_, sprite, x, y, entityType: EntityTypes) => {
     

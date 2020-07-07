@@ -1,5 +1,5 @@
-import { messages, messenger } from "./helpers/messenger.js";
-import { bump } from "./helpers/bump.js";
+import { messages, messenger } from "./helpers/messenger";
+import { bump } from "./helpers/bump";
 
 export const spike = (sprite, x, y) => {
     

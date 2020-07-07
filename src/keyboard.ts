@@ -1,4 +1,4 @@
-import { messenger, messages } from "./helpers/messenger.js";
+import { messenger, messages } from "./helpers/messenger";
 
 interface Key {
   value: string;

@@ -1,7 +1,7 @@
-import { messages, Message } from "./messenger.js";
-import { bump } from "./bump.js";
-import { diffCoords } from "./coords.js";
-import { getSides } from "./sprites.js";
+import { messages, Message } from "./messenger";
+import { bump } from "./bump";
+import { diffCoords } from "./coords";
+import { getSides } from "./sprites";
 
 export const collidingWithBob = (message: Message, sprite) => 
     message.type === messages.bobFinishesMoving && bump.hit(message.sprite, sprite)

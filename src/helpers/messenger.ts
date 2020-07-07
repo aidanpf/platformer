@@ -1,4 +1,4 @@
-import { debugMode } from "../data.js";
+import { debugMode } from "../data";
 
 export type Messenger = {
     dispatch: (message: any) => void;

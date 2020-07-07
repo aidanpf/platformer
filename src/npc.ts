@@ -1,5 +1,5 @@
-import { Message, messages, messenger } from "./helpers/messenger.js";
-import { bump } from "./helpers/bump.js";
+import { Message, messages, messenger } from "./helpers/messenger";
+import { bump } from "./helpers/bump";
 
 export const npc = (sprite, x, y, conversation: string[]) => {
     let collidingWithBob = false;
