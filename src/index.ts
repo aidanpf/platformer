@@ -1,10 +1,10 @@
-import {editor} from "./editor.js";
-import { factory } from "./factory.js";
-import { messenger, messages } from "./helpers/messenger.js";
-import { camera } from "./camera.js";
-import { conversation } from "./conversation.js";
-import { app } from "./setup.js";
-import { hud } from "./hud.js";
+import {editor} from "./editor";
+import { factory } from "./factory";
+import { messenger, messages } from "./helpers/messenger";
+import { camera } from "./camera";
+import { conversation } from "./conversation";
+import { app } from "./setup";
+import { hud } from "./hud";
 
 app.loader.add('bob', 'textures/bob.png');
 app.loader.add('shop', 'textures/shop.png');

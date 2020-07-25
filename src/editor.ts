@@ -1,5 +1,5 @@
-import { messenger, messages, waitForAllSubscribed, Message } from "./helpers/messenger.js";
-import { app } from "./setup.js";
+import { messenger, messages, waitForAllSubscribed, Message } from "./helpers/messenger";
+import { app } from "./setup";
 
 declare const PIXI: any;
 
